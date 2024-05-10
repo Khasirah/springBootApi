@@ -2,7 +2,7 @@
 
 ## Create Address
 
-Endpoint : POST /api/contact/{idContact}/addresses
+Endpoint : POST /api/contacts/{idContact}/addresses
 
 Request Header :
 
@@ -45,7 +45,7 @@ Response Body (Failed) :
 
 ## Update Address
 
-Endpoint : PUT /api/contact/{idContact}/addresses/{idAddress}
+Endpoint : PUT /api/contacts/{idContact}/addresses/{idAddress}
 
 Request Header :
 
@@ -88,7 +88,7 @@ Response Body (Failed) :
 
 ## Get Address
 
-Endpoint : GET /api/contacts/{idContact}/Addresses/{idAddress}
+Endpoint : GET /api/contacts/{idContact}/addresses/{idAddress}
 
 Request Header :
 
