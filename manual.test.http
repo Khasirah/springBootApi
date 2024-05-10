@@ -69,10 +69,10 @@ Content-Type: application/json
 X-API-TOKEN: b4761c9a-0975-4828-92a4-7ab67eb3b620
 
 {
-  "firstName": "ahmad",
-  "lastName": "ahmad",
-  "email": "ahmad@gmail.com",
-  "phone": "018236354"
+  "firstName": "kurniawan",
+  "lastName": "kurniawan",
+  "email": "kurniawa@gmail.com",
+  "phone": "82795825"
 }
 
 ### create contact bad request
@@ -88,3 +88,15 @@ X-API-TOKEN: b4761c9a-0975-4828-92a4-7ab67eb3b620
   "email": "ahmad@gmail.com",
   "phone": "018236354"
 }
+
+### search contact
+
+GET http://localhost:8080/api/contacts?name=kurniawan
+Accept: application/json
+X-API-TOKEN: b4761c9a-0975-4828-92a4-7ab67eb3b620
+
+### get contact
+
+GET http://localhost:8080/api/contacts/5731d741-352f-497f-9272-20495467dd0d
+Accept: application/json
+X-API-TOKEN: b4761c9a-0975-4828-92a4-7ab67eb3b620

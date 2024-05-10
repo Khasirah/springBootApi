@@ -30,4 +30,4 @@ user-friendly restful api for contact management with user management, address m
 
 ## Expectation
 
-I still working at this project, my plan is **adding front end like reactJS**, this project need more endpoint at address feature
+I still working at this project, my plan is **adding front end like reactJS**
