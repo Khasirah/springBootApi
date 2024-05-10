@@ -4,18 +4,24 @@ import com.peppo.springbootapi.entity.Contact;
 import com.peppo.springbootapi.entity.User;
 import com.peppo.springbootapi.model.ContactResponse;
 import com.peppo.springbootapi.model.CreateContactRequest;
+import com.peppo.springbootapi.model.SearchContactRequest;
 import com.peppo.springbootapi.model.UpdateContactRequest;
 import com.peppo.springbootapi.repository.ContactRepository;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ContactService {
@@ -83,6 +89,44 @@ public class ContactService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Kontak tidak ditemukan"));
 
         contactRepository.delete(contact);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ContactResponse> search(User user, SearchContactRequest request) {
+        Specification<Contact> specification = ((root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.equal(root.get("user"), user));
+            if (Objects.nonNull(request.getName())) {
+                predicates.add(criteriaBuilder.or(
+                        criteriaBuilder.like(root.get("firstName"), "%"+request.getName()+"%"),
+                        criteriaBuilder.like(root.get("lastName"), "%"+request.getName()+"%")
+                ));
+            }
+
+            if (Objects.nonNull(request.getEmail())) {
+                predicates.add(criteriaBuilder.like(
+                        root.get("email"), "%"+request.getEmail()+"%"
+                ));
+            }
+
+            if (Objects.nonNull(request.getPhone())) {
+                predicates.add(criteriaBuilder.like(
+                        root.get("phone"), "%"+request.getPhone()+"%"
+                ));
+            }
+
+            return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
+        });
+
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<Contact> contacts = contactRepository.findAll(specification, pageable);
+        List<ContactResponse> contactResponses = contacts
+                .getContent()
+                .stream()
+                .map(this::toContactResponse
+        ).toList();
+
+        return new PageImpl<>(contactResponses, pageable, contacts.getTotalElements());
     }
 
 }

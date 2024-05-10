@@ -40,4 +40,5 @@ create table addresses
 
 select * from users;
 select * from contacts;
+delete from contacts;
 select * from addresses;
