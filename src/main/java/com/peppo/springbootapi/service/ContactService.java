@@ -62,29 +62,27 @@ public class ContactService {
     }
 
     @Transactional
-    public ContactResponse update(User user, String id, UpdateContactRequest request) {
+    public ContactResponse update(User user, UpdateContactRequest request) {
         validationService.validate(request);
 
-        Contact contact = contactRepository.findFirstByUserAndId(user, id)
+        Contact contact = contactRepository.findFirstByUserAndId(user, request.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Kontak tidak ditemukan"));
 
-        if (Objects.nonNull(request.getFirstName())) {
             contact.setFirstName(request.getFirstName());
-        }
-
-        if (Objects.nonNull(request.getLastName())) {
             contact.setLastName(request.getLastName());
-        }
-
-        if (Objects.nonNull(request.getEmail())) {
             contact.setEmail(request.getEmail());
-        }
-
-        if (Objects.nonNull(request.getPhone())) {
             contact.setPhone(request.getPhone());
-        }
+            contactRepository.save(contact);
 
         return toContactResponse(contact);
+    }
+
+    @Transactional
+    public void delete(User user, String idContact) {
+        Contact contact = contactRepository.findFirstByUserAndId(user, idContact)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Kontak tidak ditemukan"));
+
+        contactRepository.delete(contact);
     }
 
 }

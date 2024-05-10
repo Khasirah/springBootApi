@@ -37,3 +37,7 @@ create table addresses
     primary key (id),
     foreign key fk_contacts_address (contact_id) references contacts (id)
 ) engine InnoDB;
+
+select * from users;
+select * from contacts;
+select * from addresses;
